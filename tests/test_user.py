@@ -66,6 +66,7 @@ class TestUserViewSet(TestViewSetBase):
 
     def test_delete(self):
         users = self.list()
-        assert len(users) > 0
+        users_number = len(users)
+        assert users_number > 0
         id_to_retrieve = users[0]["id"]
         self.delete(args=str(id_to_retrieve))

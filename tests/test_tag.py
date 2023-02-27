@@ -29,6 +29,9 @@ class TestTagViewSet(TestViewSetBase):
         self.create(self.tag_attributes)
         data = self.list()
         assert len(data) == 2
+        tag = data[1]
+        expected_response = self.expected_details(tag, self.tag_attributes)
+        assert tag["header"] == expected_response["header"]
 
     def test_list_unautorized(self):
         data = self.list_unautorized()
@@ -40,24 +43,22 @@ class TestTagViewSet(TestViewSetBase):
         }
 
     def test_retrieve(self):
-        self.create(self.tag_attributes)
-        tags = self.list()
-        assert len(tags) > 0
-        id_to_retrieve = tags[0]["id"]
+        data = self.create(self.tag_attributes)
+        id_to_retrieve = data["id"]
         data = self.retrieve(args=[str(id_to_retrieve)])
         assert data["header"] == self.tag_attributes["header"]
 
     def test_update(self):
-        self.create(self.tag_attributes)
-        tags = self.list()
-        assert len(tags) > 0
-        id_to_retrieve = tags[0]["id"]
+        data = self.create(self.tag_attributes)
+        id_to_retrieve = data["id"]
         data = self.update(args=str(id_to_retrieve), data={"header": "updated"})
         assert data["header"] == "updated"
 
     def test_delete(self):
         self.create(self.tag_attributes)
         tags = self.list()
-        assert len(tags) > 0
+        tags_number = len(tags)
+        assert tags_number > 0
         id_to_retrieve = tags[0]["id"]
         self.delete(args=str(id_to_retrieve))
+        assert tags_number - len(self.list()) == 1

@@ -68,9 +68,7 @@ class TestTaskViewSet(TestViewSetBase):
 
     def test_retrieve(self):
         task = self.create_task()
-        tasks = self.list()
-        assert len(tasks) > 0
-        id_to_retrieve = tasks[0]["id"]
+        id_to_retrieve = task["id"]
         data = self.retrieve(args=[str(id_to_retrieve)])
         expected_response = self.expected_details(task, self.task_attributes)
         assert data["header"] == expected_response["header"]
@@ -91,15 +89,15 @@ class TestTaskViewSet(TestViewSetBase):
 
     def test_update(self):
         task = self.create_task()
-        tasks = self.list()
-        assert len(tasks) > 0
-        id_to_retrieve = tasks[0]["id"]
+        id_to_retrieve = task["id"]
         data = self.update(args=str(id_to_retrieve), data={"header": "updated"})
         assert data["header"] == "updated"
 
     def test_delete(self):
         task = self.create_task()
         tasks = self.list()
-        assert len(tasks) > 0
-        id_to_retrieve = tasks[0]["id"]
+        tasks_number = len(tasks)
+        assert tasks_number > 0
+        id_to_retrieve = task["id"]
         self.delete(args=str(id_to_retrieve))
+        assert tasks_number - len(self.list()) == 1
