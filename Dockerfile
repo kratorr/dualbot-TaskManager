@@ -44,4 +44,5 @@ ENV DJANGO_SETTINGS_MODULE="task_manager.settings"
 
 EXPOSE 8000
 
-CMD python manage.py runserver 0.0.0.0:8000
+ENV NEW_RELIC_CONFIG_FILE=/app/newrelic.ini
+CMD newrelic-admin run-program python manage.py runserver 0.0.0.0:8000
