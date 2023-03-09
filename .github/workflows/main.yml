@@ -17,4 +17,13 @@ jobs:
         env:
           COVERAGE: true
           RAILS_ENV: test
-        run: docker-compose --file docker-compose.ci.yml run --rm api pytest 
+        run: docker-compose --file docker-compose.ci.yml run --rm api pytest
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run tests
+        env:
+          COVERAGE: true
+          RAILS_ENV: test
+        run: pip install coveralls && coverage run --source=mypkg -m pytest tests/ && coveralls
